@@ -3,7 +3,7 @@
 ## Usage
 - sudo sh setting.sh wlan1
 - sudo ./beacon-flood interface apmac file
-- sudo ./deauth-attack wlan1 cc:cc:cc:cc:cc:cc ssid-list.txt
+- sudo ./beacon-flood wlan1 cc:cc:cc:cc:cc:cc ssid-list.txt
 
 ![beaconflood](https://user-images.githubusercontent.com/46064193/107343083-5977d980-6b04-11eb-8ef5-c4930ca89875.PNG)
 
