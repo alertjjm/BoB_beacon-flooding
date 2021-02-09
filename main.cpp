@@ -7,8 +7,8 @@
 #include "header.h"
 using namespace std;
 void usage() {
-    printf("syntax : deauth-attack <interface> <ap mac> <filename>\n");
-    printf("sample : deauth-attack wlan1 70:5D:CC:04:2B:A2 ssid-list.txt\n");
+    printf("syntax : beacon-flood <interface> <ap mac> <filename>\n");
+    printf("sample : beacon-flood wlan1 70:5D:CC:04:2B:A2 ssid-list.txt\n");
 }
 void send_deauth(pcap_t* handle, Mac ap, Mac st,char ssidlist[][40], int len){
     char ssid[40];
