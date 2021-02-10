@@ -13,15 +13,18 @@ void usage() {
 void send_deauth(pcap_t* handle, Mac ap, Mac st,char ssidlist[][40], int len){
     char ssid[40];
     u_char supported_data_rates[8]={0x82,0x84,0x8b,0x96,0x24,0x30,0x48,0x6c};
-    u_char currentch[1]={0x0c};
+    u_char currentch[1];
     static int count=0;
     strcpy(ssid,ssidlist[count++]);
     if(ssid[strlen(ssid)-1]=='\n'){
         ssid[strlen(ssid)-1]=0;
     }
+    currentch[0]=count%14+1;
     count=count%len;
     int totallen=sizeof(radiotap_header)+sizeof(ieeeheader)+6+strlen(ssid)+sizeof(supported_data_rates)/sizeof(u_char)+sizeof(currentch)/sizeof(u_char);
-    frame packet=frame(ap,st);
+    Mac ap1=ap;
+    ap1.mac_[5]=count;
+    frame packet=frame(ap1,st);
     Taggedparameter ssidparameter=Taggedparameter(0,strlen(ssid),(u_char*)ssid);
     Taggedparameter supportedrates=Taggedparameter(1,sizeof(supported_data_rates)/sizeof(u_char),supported_data_rates);
     Taggedparameter dsparameter=Taggedparameter(3,sizeof(currentch)/sizeof(u_char),currentch);
@@ -33,7 +36,7 @@ void send_deauth(pcap_t* handle, Mac ap, Mac st,char ssidlist[][40], int len){
 	if (res != 0) {
 		fprintf(stderr, "pcap_sendpacket return %d error=%s\n", res, pcap_geterr(handle));
 	}
-    cout<<"[INFO] Beacon!! from "<<string(ap)<<" to "<<string(st)<<" ["<<count<<"] "<<string(ssid)<<endl;
+    cout<<"[INFO] Beacon!! from "<<string(ap1)<<" to "<<string(st)<<" ["<<count<<"] "<<string(ssid)<<endl;
 }
 int main(int argc, char* argv[]) {
     char* line;
@@ -69,7 +72,7 @@ int main(int argc, char* argv[]) {
     }
     while (true) {
         send_deauth(handle, ap,st,ssidlist, linecount);
-        usleep(int(100000/linecount));
+        usleep(int(1000/linecount));
     }
     pcap_close(handle);
 }
